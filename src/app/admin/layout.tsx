@@ -1,0 +1,25 @@
+import Link from "next/link";
+import { requireRole } from "@/lib/auth";
+import Realtime from "@/components/Realtime";
+import ThemePicker from "@/components/ThemePicker";
+import { signOut } from "../login/actions";
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const { me } = await requireRole("admin");
+  return (
+    <div className="agent">
+      <div className="mode">SPARROW · ADMIN</div>
+      <div className="wrap" style={{ paddingBottom: 0 }}>
+        <details className="card"><summary><b>Theme</b></summary><div style={{ marginTop: 10 }}><ThemePicker /></div></details>
+      </div>
+      {children}
+      <nav className="tabbar">
+        <Link href="/admin">Orders</Link>
+        <Link href="/admin/users">Users</Link>
+        <Link href="/admin/settings">Settings</Link>
+        <form action={signOut} style={{ flex: 1, display: "flex" }}><button>Log out</button></form>
+      </nav>
+      <Realtime channel={`admin-${me.id}`} />
+    </div>
+  );
+}
