@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "./supabase/server";
-import { effectiveRole, type Role } from "./roles";
+import { effectiveRole, homeFor, type Role } from "./roles";
 
 // Call at the top of every server component and server action. Middleware is only the first gate.
 export async function requireRole(want: Role) {
@@ -10,6 +10,6 @@ export async function requireRole(want: Role) {
   const { data: me } = await sb.from("users").select("*").eq("id", user.id).single();
   const role = effectiveRole(me);
   if (!me || !role) redirect("/login");
-  if (role !== want) redirect(role === "agent" ? "/agent" : "/app");
+  if (role !== want) redirect(homeFor(role));
   return { sb, me };
 }
