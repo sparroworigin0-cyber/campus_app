@@ -67,3 +67,6 @@ input,textarea,select{width:100%;padding:12px;border:var(--bw) solid var(--line)
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--brand) 55%,transparent)}100%{box-shadow:0 0 0 9px transparent}}
 :focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.btn.danger{background:#B91C1C;color:#fff;border-color:transparent}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.search{display:flex;gap:8px}
