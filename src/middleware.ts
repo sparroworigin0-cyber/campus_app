@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { effectiveRole } from "@/lib/roles";
+import { effectiveRole, homeFor } from "@/lib/roles";
 
 export async function middleware(req: NextRequest) {
   let res = NextResponse.next({ request: req });
@@ -22,12 +22,11 @@ export async function middleware(req: NextRequest) {
   }
   const go = (to: string) => NextResponse.redirect(new URL(to, req.url));
   const path = req.nextUrl.pathname;
-  if (path.startsWith("/agent") && role !== "agent") return go(role === "customer" ? "/app" : "/login");
-  if (path.startsWith("/app")) {
-    if (!role) return go("/login");
-    if (role === "agent") return go("/agent");
-  }
+  const home = homeFor(role);
+  if (path.startsWith("/admin") && role !== "admin") return go(home);
+  if (path.startsWith("/agent") && role !== "agent") return go(home);
+  if (path.startsWith("/app") && role !== "customer") return go(home);
   return res;
 }
 
-export const config = { matcher: ["/app/:path*", "/agent/:path*"] };
+export const config = { matcher: ["/app/:path*", "/agent/:path*", "/admin/:path*"] };
