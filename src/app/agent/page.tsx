@@ -14,8 +14,10 @@ export default async function Feed({ searchParams }: { searchParams: { error?: s
     .select("id,public_code,item_name,item_description,item_image_url,proposed_price,hostel,created_at")
     .eq("status", "PENDING_ACCEPTANCE").gt("expires_at", new Date().toISOString())
     .order("created_at", { ascending: false });
-  const age = (t: string) => Math.max(0, Math.round((Date.now() - new Date(t).getTime()) / 60000)) + "m";
-
+    const age = (t: string) => {
+    const m = Math.max(0, Math.round((Date.now() - new Date(t).getTime()) / 60000));
+    return m < 60 ? `${m}m` : m < 1440 ? `${Math.floor(m / 60)}h` : `${Math.floor(m / 1440)}d`;
+  };
   return (
     <main className="wrap stack">
       <h1>Available orders ({data?.length ?? 0})</h1>
